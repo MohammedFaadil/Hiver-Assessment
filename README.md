@@ -206,7 +206,6 @@ live in `src/agent/config.py`. LLM provider config is via `.env` (see `.env.exam
 
 ```
 GROQ_API_KEY=...
-LLM_PROVIDER=groq
 LLM_AGENT_MODEL=openai/gpt-oss-20b     # optional override
 LLM_JUDGE_MODEL=openai/gpt-oss-120b    # optional override
 ```
