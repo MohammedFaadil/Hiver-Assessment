@@ -1,4 +1,4 @@
-# Hiver AI Support Agent — AmazonHelp Triage
+# Hiver AI Support Agent — AmazonHelp Triage AI Agent
 
 **An AI support-triage agent built end-to-end for the Hiver SDE Intern take-home assignment: given a real, messy customer tweet, classify its intent, draft a reply grounded in how the brand has actually resolved similar issues before, and decide — with a stated, auditable reason — whether it's safe to auto-handle or whether it needs a human.**
 
