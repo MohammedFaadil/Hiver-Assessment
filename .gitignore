@@ -1,0 +1,28 @@
+# secrets
+.env
+*.env.local
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# data (raw + intermediate pipeline artifacts are large / fully regeneratable
+# via scripts/02-04 — keep repo light. data/golden/ IS committed: it's the
+# actual hand-labeled deliverable.)
+data/raw/
+data/cache/
+data/processed/
+*.zip
+
+# model artifacts
+models/*.joblib
+!models/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
