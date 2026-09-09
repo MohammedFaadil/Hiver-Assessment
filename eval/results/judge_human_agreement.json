@@ -1,0 +1,30 @@
+{
+  "description": "15 (customer message, drafted reply) pairs, independently re-graded by hand on the same 1-5 rubric the LLM judge uses, before comparing to the judge's stored scores. Sample is fixed (see scripts/10_judge_agreement.py), not cherry-picked after seeing the judge's scores.",
+  "n": 15,
+  "exact_match_rate_overall": 0.6,
+  "mean_abs_diff_overall": 0.4,
+  "within_one_point_rate": 1.0,
+  "spearman_corr": 0.9527130301172043,
+  "per_dimension": {
+    "grounding": {
+      "mean_abs_diff": 0.26666666666666666,
+      "within_one_point_rate": 1.0
+    },
+    "helpfulness": {
+      "mean_abs_diff": 0.26666666666666666,
+      "within_one_point_rate": 1.0
+    },
+    "tone": {
+      "mean_abs_diff": 0.4666666666666667,
+      "within_one_point_rate": 0.9333333333333333
+    },
+    "clarity": {
+      "mean_abs_diff": 0.26666666666666666,
+      "within_one_point_rate": 1.0
+    },
+    "overall": {
+      "mean_abs_diff": 0.4,
+      "within_one_point_rate": 1.0
+    }
+  }
+}

@@ -44,6 +44,12 @@ class RateLimiter:
                 sleep_s = 0
                 self.used += est_tokens
         if sleep_s > 0:
+            if sleep_s > 3:
+                # Visible, flushed, so a long-running batch script's log shows
+                # *why* progress paused instead of just going quiet — a silent
+                # multi-minute sleep here once looked indistinguishable from a
+                # hang (see DECISION_LOG.md).
+                print(f"    [rate-limit] sleeping {sleep_s:.1f}s (token budget)", flush=True)
             time.sleep(sleep_s)
             with _lock:
                 self.window_start = time.time()
@@ -121,7 +127,9 @@ def chat_structured(
             )
         except requests.RequestException as e:
             last_err = e
-            time.sleep(min(2 ** attempt, 20))
+            wait = min(2 ** attempt, 20)
+            print(f"    [network error] {e!r} -- retrying in {wait}s (attempt {attempt + 1}/{retries})", flush=True)
+            time.sleep(wait)
             continue
 
         if resp.status_code == 200:
@@ -135,12 +143,19 @@ def chat_structured(
             return parsed
 
         if resp.status_code == 429:
-            retry_after = float(resp.headers.get("Retry-After", 2 ** attempt))
+            # Cap the wait: a runaway Retry-After (e.g. a daily-quota reset
+            # hours away, as opposed to the usual per-minute throttle) should
+            # fail fast into the retry-count limit rather than silently sleep
+            # for a very long time on one call.
+            retry_after = min(float(resp.headers.get("Retry-After", 2 ** attempt)), 30.0)
+            print(f"    [429] retrying in {retry_after:.1f}s (attempt {attempt + 1}/{retries})", flush=True)
             time.sleep(retry_after + 0.5)
             continue
 
         if resp.status_code >= 500:
-            time.sleep(min(2 ** attempt, 20))
+            wait = min(2 ** attempt, 20)
+            print(f"    [{resp.status_code}] server error -- retrying in {wait}s (attempt {attempt + 1}/{retries})", flush=True)
+            time.sleep(wait)
             continue
 
         raise LLMError(f"Groq API error {resp.status_code}: {resp.text[:500]}")

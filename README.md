@@ -618,7 +618,19 @@ Every drafted reply is scored 1-5 on four dimensions — **grounding** (does it 
 facts and sensibly use the shown precedent?), **helpfulness**, **tone**, **clarity** — plus an
 overall score, by `openai/gpt-oss-120b`: a different, larger model than the one that drafts
 replies (`openai/gpt-oss-20b`), specifically to reduce (not eliminate — see `REPORT.md` §4)
-same-model self-preference bias.
+same-model self-preference bias. Real results, full data in `eval/results/judge_scores.csv`:
+
+| Dimension | Simple baseline (n=200) | **Headline LLM+RAG (n=120)** |
+|---|---:|---:|
+| Grounding | 3.08 | **4.60** |
+| Helpfulness | 2.50 | **4.40** |
+| Tone | 3.30 | **4.70** |
+| Clarity | 3.94 | **4.82** |
+| **Overall** | **2.82** | **4.53** |
+
+The gap holds across every dimension, not just the average — the simple baseline's weakest score
+is `helpfulness` (2.50/5), consistent with reusing a historical reply verbatim often answering a
+*similar* past case rather than *this* customer's actual situation.
 
 ### 12.3 Judge-vs-human agreement (`scripts/10_judge_agreement.py`) — the assignment's specific ask
 

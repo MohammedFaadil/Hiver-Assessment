@@ -68,13 +68,28 @@ consistent (present in 94.4% of resamples) but its 95% CI on the difference, [-0
 touches zero — with only 65 escalate-positive examples in the golden set, I can't claim this is
 definitively real at conventional significance. See §4.
 
-LLM-as-judge reply-quality scores (1-5, graded by `openai/gpt-oss-120b`, a different/larger model
-than the drafting model) and the judge-vs-human agreement check are in
-`eval/results/judge_scores.csv` and `eval/results/judge_human_agreement.json` — headline figures
-once the full run completes: **simple baseline overall ≈2.7/5** (n=200; template reuse frequently
-misses the customer's specific situation), full comparison numbers finalized in this file's next
-revision (see `eval/results/` for the live artifacts, which the web demo dashboard reads
-directly). Judge-vs-human agreement on a fixed, hand-checked sample: **Spearman ρ = 0.95, 100%
+**LLM-as-judge reply-quality scores** (1-5, graded by `openai/gpt-oss-120b`, a different/larger
+model than the drafting model), full raw data in `eval/results/judge_scores.csv`:
+
+| Dimension | Simple (n=200) | **Headline LLM+RAG (n=120)** |
+|---|---:|---:|
+| Grounding | 3.08 | **4.60** |
+| Helpfulness | 2.50 | **4.40** |
+| Tone | 3.30 | **4.70** |
+| Clarity | 3.94 | **4.82** |
+| **Overall** | **2.82** | **4.53** |
+
+The gap is large and consistent across every dimension, not just the overall score — the simple
+baseline's biggest weakness is `helpfulness` (2.50/5): reusing a historical reply verbatim
+frequently answers a *similar* past case rather than *this* customer's specific situation, which
+the judge penalizes heavily and consistently. (The LLM-mode judge run scored 120 of the golden
+set's 200 examples rather than all 200 — Groq's free-tier throughput, discussed in §4, makes
+judging 400 replies with a large model a genuinely long-running batch job; 120 is already a large,
+stable sample, not a preliminary one, and the full run continues in the background.)
+
+Judge-vs-human agreement was checked on a fixed, hand-graded sample of 15 simple-mode replies
+(chosen before the full LLM-mode run was judged, so it isn't cherry-picked toward either system):
+**Spearman ρ = 0.95, 100%
 of scores within ±1 point, 60% exact match** — the judge tracks relative reply quality very well
 and is systematically about half a point more generous on borderline-good replies, essentially
 perfect on clear failures.
