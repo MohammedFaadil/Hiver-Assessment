@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hiver AI Support Agent — AmazonHelp Triage Demo</title>
+<meta name="description" content="Live demo: intent classification, grounded reply drafting, and escalation triage for AmazonHelp Twitter support." />
+<link rel="stylesheet" href="/static/styles.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%232a78d6%22/><text x=%2250%22 y=%2268%22 font-size=%2258%22 font-family=%22system-ui%22 fill=%22white%22 text-anchor=%22middle%22>H</text></svg>" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">H</span>
+      <div class="brand-text">
+        <span class="brand-name">Hiver AI Support Agent</span>
+        <span class="brand-sub">AmazonHelp triage · take-home demo</span>
+      </div>
+    </div>
+    <nav class="topnav" aria-label="Primary">
+      <a href="#try">Try it live</a>
+      <a href="#dashboard">Evaluation</a>
+      <a href="#failures">Failure analysis</a>
+      <a href="#about">How it works</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">Live pipeline · real Groq API calls · zero mock data</span>
+      <h1>Classify, draft, and route a customer message — instantly.</h1>
+      <p class="lede">
+        Type or pick a real customer tweet below. The agent classifies intent, drafts a reply
+        grounded in how AmazonHelp has actually resolved similar issues before, and decides whether to
+        auto&#8209;handle or escalate to a human — with a stated reason. Every mode runs the real
+        pipeline, side by side.
+      </p>
+    </div>
+  </section>
+
+  <section id="try" class="section">
+    <div class="container">
+      <h2 class="section-title">Try it live</h2>
+      <p class="section-sub">Pick an example or write your own incoming customer message.</p>
+
+      <div class="example-chips" id="exampleChips" role="list"></div>
+
+      <div class="input-card">
+        <textarea
+          id="messageInput"
+          rows="3"
+          maxlength="500"
+          placeholder="e.g. My package was supposed to arrive 3 days ago and tracking hasn't updated at all..."
+        ></textarea>
+        <div class="input-toolbar">
+          <span id="charCount" class="char-count">0 / 500</span>
+          <div class="mode-toggles" id="modeToggles">
+            <label class="mode-toggle"><input type="checkbox" value="trivial" checked disabled /> Trivial</label>
+            <label class="mode-toggle"><input type="checkbox" value="simple" checked disabled /> Simple (ML)</label>
+            <label class="mode-toggle"><input type="checkbox" value="llm" checked /> LLM + RAG</label>
+          </div>
+          <button id="analyzeBtn" class="btn-primary">
+            <span class="btn-label">Analyze</span>
+            <span class="btn-spinner" hidden></span>
+          </button>
+        </div>
+      </div>
+
+      <div id="errorBanner" class="error-banner" hidden></div>
+      <div id="resultsArea" class="results-grid"></div>
+    </div>
+  </section>
+
+  <section id="dashboard" class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Evaluation results</h2>
+      <p class="section-sub">
+        Automated metrics against a 200-example hand-labeled golden set (not used for training or
+        retrieval grounding), plus independent LLM-as-judge reply-quality scores.
+        <span id="metricsMissing" class="muted-note" hidden>Run <code>scripts/08_evaluate.py</code> (and optionally <code>09_llm_judge.py</code>) to populate this section.</span>
+      </p>
+
+      <div class="stat-grid" id="statGrid"></div>
+
+      <div class="chart-grid">
+        <div class="chart-card">
+          <div class="chart-card-title">Intent macro-F1 vs. escalation F1, by system tier</div>
+          <canvas id="comparisonChart" height="260"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">LLM-as-judge reply-quality scores (1–5)</div>
+          <canvas id="judgeChart" height="260"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-title" id="confusionTitle">Intent confusion matrix — headline (LLM) system</div>
+        <div class="cm-scroll"><div id="confusionMatrix" class="cm-grid"></div></div>
+        <p class="muted-note cm-caption">Rows = gold label, columns = predicted label. Darker = more examples. Hover a cell for the exact count.</p>
+      </div>
+
+      <div class="agreement-card" id="agreementCard" hidden>
+        <div class="chart-card-title">Judge ↔ human agreement (independent re-grade)</div>
+        <div id="agreementBody"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="failures" class="section">
+    <div class="container">
+      <h2 class="section-title">Failure analysis</h2>
+      <p class="section-sub">Real disagreements between the headline (LLM) system and the hand-labeled gold set — not cherry-picked successes.</p>
+
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" data-tab="wrong_intent" role="tab" aria-selected="true">Wrong intent</button>
+        <button class="tab-btn" data-tab="wrong_escalate" role="tab" aria-selected="false">Wrong escalation call</button>
+      </div>
+      <div id="failureList" class="failure-list"></div>
+    </div>
+  </section>
+
+  <section id="about" class="section section-alt">
+    <div class="container about-grid">
+      <div>
+        <h2 class="section-title">How this works</h2>
+        <ol class="how-list">
+          <li><strong>Data:</strong> ~77k reconstructed first-contact AmazonHelp threads from the Kaggle "Customer Support on Twitter" dataset, filtered to English.</li>
+          <li><strong>Intent taxonomy:</strong> 8 categories derived from reading real threads (see the repo's <code>LABELING_GUIDE.md</code>).</li>
+          <li><strong>Trivial baseline:</strong> majority-class intent, one canned reply, never escalates.</li>
+          <li><strong>Simple baseline:</strong> TF-IDF + Naive Bayes classifier (pure numpy, no scikit-learn) + nearest-neighbor retrieval-templated reply.</li>
+          <li><strong>Headline system:</strong> same retrieval grounding, reply drafted by an LLM (Groq) conditioned on real historical resolutions, with a deterministic, auditable rule engine — not the LLM — deciding escalation.</li>
+        </ol>
+      </div>
+      <div>
+        <h2 class="section-title">Escalation policy</h2>
+        <p>A message is routed to a human when: it's in a policy-flagged high-risk intent category (billing, explicit complaints, unclear), the classifier's confidence is low, no sufficiently similar historical resolution was found, or the message contains urgency/frustration/safety language.</p>
+        <p class="muted-note">See <code>DECISION_LOG.md</code> and <code>REPORT.md</code> in the repo for the full reasoning, baselines comparison, and honest failure analysis.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <span>Built for the Hiver SDE Intern take-home assignment.</span>
+    <span class="muted-note">Data: Kaggle "Customer Support on Twitter" (thoughtvector) · LLM: Groq (openai/gpt-oss-20b &amp; 120b) · No data leaves this machine except LLM API calls.</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
