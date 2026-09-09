@@ -1,0 +1,380 @@
+{
+  "llm": {
+    "n": 200,
+    "intent": {
+      "accuracy": 0.715,
+      "macro_f1": 0.6927615372998932,
+      "weighted_f1": 0.7449711531065516,
+      "per_class_f1": {
+        "order_delivery": 0.8163265306122449,
+        "returns_refund": 0.7555555555555556,
+        "billing_payment": 0.7499999999999999,
+        "account_access": 0.8695652173913044,
+        "product_inquiry": 0.8070175438596492,
+        "complaint_escalation": 0.375,
+        "compliment": 0.9333333333333333,
+        "unclear_other": 0.23529411764705882
+      },
+      "confusion_matrix": [
+        [
+          60,
+          0,
+          0,
+          0,
+          0,
+          16,
+          0,
+          1
+        ],
+        [
+          4,
+          17,
+          0,
+          0,
+          0,
+          6,
+          0,
+          0
+        ],
+        [
+          4,
+          1,
+          12,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          10,
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          23,
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          12,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          7,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          3,
+          5,
+          0,
+          2
+        ]
+      ],
+      "labels": [
+        "order_delivery",
+        "returns_refund",
+        "billing_payment",
+        "account_access",
+        "product_inquiry",
+        "complaint_escalation",
+        "compliment",
+        "unclear_other"
+      ]
+    },
+    "escalation": {
+      "tp": 33,
+      "fp": 44,
+      "fn": 32,
+      "tn": 91,
+      "precision": 0.42857142857142855,
+      "recall": 0.5076923076923077,
+      "f1": 0.46478873239436613,
+      "accuracy": 0.62
+    },
+    "reply_quality_proxy": {
+      "rouge_l_vs_historical_mean": 0.17053937143379294,
+      "unigram_f1_vs_historical_mean": 0.14509247779693019,
+      "reply_len_words_mean": 40.53,
+      "reply_len_words_median": 39.0
+    }
+  },
+  "simple": {
+    "n": 200,
+    "intent": {
+      "accuracy": 0.605,
+      "macro_f1": 0.5446906307425678,
+      "weighted_f1": 0.6392146308952068,
+      "per_class_f1": {
+        "order_delivery": 0.7919463087248323,
+        "returns_refund": 0.6956521739130435,
+        "billing_payment": 0.6875,
+        "account_access": 0.6,
+        "product_inquiry": 0.5217391304347827,
+        "complaint_escalation": 0.3157894736842105,
+        "compliment": 0.5,
+        "unclear_other": 0.2448979591836735
+      },
+      "confusion_matrix": [
+        [
+          59,
+          3,
+          1,
+          0,
+          1,
+          9,
+          3,
+          1
+        ],
+        [
+          2,
+          16,
+          0,
+          0,
+          0,
+          5,
+          2,
+          2
+        ],
+        [
+          4,
+          0,
+          11,
+          0,
+          0,
+          0,
+          1,
+          3
+        ],
+        [
+          0,
+          0,
+          1,
+          6,
+          1,
+          1,
+          0,
+          4
+        ],
+        [
+          2,
+          0,
+          0,
+          1,
+          12,
+          3,
+          0,
+          13
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          6,
+          0,
+          7
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          5,
+          1
+        ],
+        [
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          6
+        ]
+      ],
+      "labels": [
+        "order_delivery",
+        "returns_refund",
+        "billing_payment",
+        "account_access",
+        "product_inquiry",
+        "complaint_escalation",
+        "compliment",
+        "unclear_other"
+      ]
+    },
+    "escalation": {
+      "tp": 39,
+      "fp": 45,
+      "fn": 26,
+      "tn": 90,
+      "precision": 0.4642857142857143,
+      "recall": 0.6,
+      "f1": 0.5234899328859061,
+      "accuracy": 0.645
+    },
+    "reply_quality_proxy": {
+      "rouge_l_vs_historical_mean": 0.1589256171491088,
+      "unigram_f1_vs_historical_mean": 0.11164652292203338,
+      "reply_len_words_mean": 20.965,
+      "reply_len_words_median": 19.0
+    }
+  },
+  "trivial": {
+    "n": 200,
+    "intent": {
+      "accuracy": 0.385,
+      "macro_f1": 0.06949458483754513,
+      "weighted_f1": 0.214043321299639,
+      "per_class_f1": {
+        "order_delivery": 0.555956678700361,
+        "returns_refund": 0.0,
+        "billing_payment": 0.0,
+        "account_access": 0.0,
+        "product_inquiry": 0.0,
+        "complaint_escalation": 0.0,
+        "compliment": 0.0,
+        "unclear_other": 0.0
+      },
+      "confusion_matrix": [
+        [
+          77,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          27,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          19,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          13,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          31,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          13,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "labels": [
+        "order_delivery",
+        "returns_refund",
+        "billing_payment",
+        "account_access",
+        "product_inquiry",
+        "complaint_escalation",
+        "compliment",
+        "unclear_other"
+      ]
+    },
+    "escalation": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 65,
+      "tn": 135,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "accuracy": 0.675
+    },
+    "reply_quality_proxy": {
+      "rouge_l_vs_historical_mean": 0.08290283630867165,
+      "unigram_f1_vs_historical_mean": 0.025527065762499346,
+      "reply_len_words_mean": 18.0,
+      "reply_len_words_median": 18.0
+    }
+  }
+}
