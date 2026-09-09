@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: hiver-support-agent
+    env: python
+    buildCommand: pip install -r requirements.txt && pip install -e .
+    startCommand: uvicorn webapp.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false          # You'll paste this manually in Render dashboard
+      - key: LLM_PROVIDER
+        value: groq
