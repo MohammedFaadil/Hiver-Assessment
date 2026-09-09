@@ -164,3 +164,12 @@ methodology specifically.
     being the "obvious" choice for "5 dimensions x 3 systems." Radar charts distort
     area/angle perception and make non-adjacent axes hard to compare directly — a plain
     grouped bar keeps every score on one shared, honest axis.
+
+## Assignment-specific
+
+22. **Did not use Banking77, the assignment's optional secondary dataset.** It's explicitly
+    scoped to "intent work only," but its 77 categories are banking-specific (card disputes,
+    exchange rates, top-ups) with no clean mapping onto an e-commerce brand's support
+    traffic. The taxonomy here was derived directly from reading ~200 real AmazonHelp
+    threads instead, which the assignment separately asks for ("intents that you define
+    from the data") — recorded here so this reads as a considered choice, not an oversight.
